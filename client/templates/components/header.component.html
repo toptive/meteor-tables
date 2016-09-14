@@ -1,0 +1,47 @@
+<template name="TableHeader">
+  <style>
+    .entry-option > .nav > li > a {
+      padding: 1px 6px;
+    }
+
+    .entry-option > .nav {
+      display: inline-flex;
+      padding-bottom: 5px;
+    }
+
+    .entry-option {
+      display: flex;
+      margin-top: 5px;
+    }
+
+    #search-box {
+      transition: width;
+    }
+
+    #search-box:focus {
+      width: 300px;
+    }
+  </style>
+  
+  <div class="row">
+    <div class="col-md-6 entry-option">
+      
+      <ul class="nav nav-pills">
+        Show&nbsp;
+        {{#each option in settings.entries}} 
+          <li class="{{selectedEntry option}}" role="presentation"><a href="#" data-entry="{{option}}">{{option}}</a></li>
+        {{/each}}
+        &nbsp;entries
+      </ul>
+    
+    </div>
+    <div class="col-md-6">
+
+      <div class="form-group pull-right">
+        <input type="text" class="form-control" id="search-box" placeholder="Search..">
+      </div>
+    
+    </div>
+  </div>
+  
+</template>

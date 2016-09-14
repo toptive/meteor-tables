@@ -1,0 +1,27 @@
+<template name="TableFooter">
+  <style>
+    .pagination {
+      margin: 0;
+    }
+
+    .result-description {
+      margin: 10px 0 10px 0;
+    }
+  </style>
+
+  <div class="row">
+    <div class="col-md-6">
+      
+      <p class="result-description">Showing {{formatNumber result.beginPage}} to {{formatNumber result.endPage}} of {{formatNumber result.total}} entries</p>
+    
+    </div>
+    <div class="col-md-6">
+
+      <nav aria-label="Table navigation" class="pull-right">
+        <ul class="pagination"></ul>
+      </nav>
+    
+    </div>
+  </div>
+
+</template>
