@@ -4,14 +4,14 @@ qactivo:meteor-tables
 ## How to use
 
 - [ ] Create a publication with the following params
-```
+```javascript
 Meteor.publish('incomplete_profiles_table', function (selector, options) {
   return SomeCollectionHere.find(selector, options);
 });
 ```
 
 - [ ] Create a new template to render each one of the elements of the published collection
-```
+```html
 <template name="incomplete_user_row">
   <tr>
     <td>{{username}}</td>
@@ -26,7 +26,7 @@ Meteor.publish('incomplete_profiles_table', function (selector, options) {
 </template>
 ```
 - [ ] Setup table settings inside of some controller/template
-```
+```javascript
 ExampleController = RouteController.extend({
   template: 'example_template',
   data: function () {
@@ -61,7 +61,7 @@ ExampleController = RouteController.extend({
 
 - [ ] Finally, inject the **MeteorTable** to the html template
 
-```
+```html
 <template name="example_template">
   <h2 class="page-header">Example page</h2>
 
