@@ -1,5 +1,3 @@
-Meteor.publish('tables.collection.info', function () {
-  // publish body
-  // 
-  // https://github.com/percolatestudio/publish-counts
+Meteor.publish('tables.collection.info', function (selector) {
+  Counts.publish(this, 'total_elems', UsersReport.find(selector));
 });

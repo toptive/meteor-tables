@@ -9,19 +9,15 @@ Template.MeteorTable.onCreated(function () {
     entries: [5, 10, 25, 50, 100],
     current: {
       entry: 5,
-      page: 1,
-      result: {
-        beginPage: 0,
-        endPage: 0,
-        total: 0
-      }
+      page: 1
     }
   });
 
   // Taking ReactiveVar references
-  self.selector = data.selector;
   self.fields = data.fields;
+  self.selector = data.selector || new ReactiveVar({});
   self.options = new ReactiveVar({});
+  self.queryResult = new ReactiveVar(0);
 
   self.autorun(function () {
     let settings = self.settings.get();
@@ -38,6 +34,9 @@ Template.MeteorTable.onCreated(function () {
   });
 
   self.getData = function () {
+
+    self.queryResult.set(data.collection.find(self.selector.get()).count());
+
     return data.collection.find(self.selector.get());
   }
 });
@@ -54,6 +53,17 @@ Template.MeteorTable.helpers({
   settings: function () {
     // We take this reference to TableHeader and TableFooter components
     return Template.instance().settings;
+  },
+  selector: function () {
+    // We take this reference to TableFooter component
+    return Template.instance().selector;
+  },
+  fields: function () {
+    // We take this reference to TableHeader component
+    return Template.instance().fields;
+  },
+  result: function () {
+    return Template.instance().queryResult;
   },
   documents: function () {
     return Template.instance().getData();
