@@ -1,7 +1,9 @@
 Template.TableHeader.onCreated(function () {
   let self = this;
 
-  self.settings = self.data;
+  self.settings = self.data.settings;
+  self.selector = self.data.selector;
+  self.fields = self.data.fields;
 });
 
 Template.TableHeader.onRendered(function () {
@@ -14,16 +16,27 @@ Template.TableHeader.onRendered(function () {
   // });
 });
 
+var timeoutId;
+
 Template.TableHeader.events({
   'keyup #search-box': function (e, template) {
     e.preventDefault();
     
-    let searchString = e.currentTarget.value;
+    let instance = Template.instance();
     
-    let settings = Template.instance().settings.get();
-    settings.current.searchString = searchString;
+    clearTimeout(timeoutId);
 
-    Template.instance().settings.set(settings);
+    timeoutId = setTimeout(function () {
+      let searchString = e.currentTarget.value;
+        
+        let selector = Helpers.generateSearchFilter(
+          instance.selector.get(),
+          instance.fields.get(),
+          searchString
+        );
+        
+        instance.selector.set(selector);
+    }, 500);
   },
   'click li[role="presentation"] > a': function (e, template) {
     e.preventDefault();

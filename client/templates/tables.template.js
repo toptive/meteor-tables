@@ -14,8 +14,8 @@ Template.MeteorTable.onCreated(function () {
   });
 
   // Taking ReactiveVar references
-  self.selector = data.selector;
   self.fields = data.fields;
+  self.selector = data.selector || new ReactiveVar({});
   self.options = new ReactiveVar({});
   self.queryResult = new ReactiveVar(0);
 
@@ -36,7 +36,7 @@ Template.MeteorTable.onCreated(function () {
   self.getData = function () {
 
     self.queryResult.set(data.collection.find(self.selector.get()).count());
-    
+
     return data.collection.find(self.selector.get());
   }
 });
@@ -57,6 +57,10 @@ Template.MeteorTable.helpers({
   selector: function () {
     // We take this reference to TableFooter component
     return Template.instance().selector;
+  },
+  fields: function () {
+    // We take this reference to TableHeader component
+    return Template.instance().fields;
   },
   result: function () {
     return Template.instance().queryResult;

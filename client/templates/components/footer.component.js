@@ -20,9 +20,9 @@ Template.TableFooter.onRendered(function () {
     // TODO FIX pagination limit when entry gets higher
     // 
     self.$('.pagination').pagination({
-      items: Counts.get('total_elems'), // TODO GET VALUE FROM ID PUBLICATION
+      items: Counts.get('total_elems'),
       currentPage: settings.current.page,
-      itemsOnPage: settings.current.entry, // TODO SET SELECTED ENTRIES FROM header.component
+      itemsOnPage: settings.current.entry,
       displayedPages: 3,
       edges: 1,
       ellipsePageSet: false,
@@ -48,10 +48,10 @@ Template.TableFooter.helpers({
     let settings = Template.instance().settings.get();
 
     let offsetPage = settings.current.entry * (settings.current.page - 1) + 1;
-
+    let itemsFound = offsetPage + Template.instance().queryResult.get() - 1;
     return {
-      beginPage: offsetPage,
-      endPage: offsetPage + Template.instance().queryResult.get() - 1,
+      beginPage: Math.min(offsetPage, itemsFound),
+      endPage: itemsFound,
       total: Counts.get('total_elems')
     };
   }
