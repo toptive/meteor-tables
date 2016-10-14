@@ -3,6 +3,8 @@ Template.MeteorTable.onCreated(function () {
   
   let data = Template.currentData().settings;
 
+  Tables.registerTable(data);
+  
   // TODO load state from localstorage, maybe Session would be better
   self.settings = new ReactiveVar({
     template: data.template,
