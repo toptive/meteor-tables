@@ -18,57 +18,52 @@ Template.MeteorTable.onCreated(function () {
     }
   });
 
+  // Taking ReactiveVar references
+  self.selector = data.selector;
+  self.fields = data.fields;
+  self.options = new ReactiveVar({});
+
   self.autorun(function () {
     let settings = self.settings.get();
 
-    options = {
-      fields: data.fields.reduce((o, e) => { o[e.data] = 1; return o; }, {}),
+    self.options.set({
+      fields: self.fields.get().reduce((o, e) => { o[e.data] = 1; return o; }, {}),
       limit: settings.current.entry,
       skip: settings.current.page * settings.current.entry - settings.current.entry
-    };
-    // console.log('subscribing..', options);
-    self.subscribe(data.publication, data.selector, options);
+    });
+  });
+
+  self.autorun(function () {
+    self.subscribe(data.publication, self.selector.get(), self.options.get());
   });
 
   self.getData = function () {
-    let settings = self.settings.get();
-
-    return data.collection.find(data.selector, options);
+    return data.collection.find(self.selector.get());
   }
 });
 
 Template.MeteorTable.onRendered(function () {
   let self = this;
-  // TODO fetch data
-  
-  let settings = self.settings.get();
-  // settings.current.result = {
-  //   beginPage: 101,
-  //   endPage: 125,
-  //   total: 1044
-  // };
-
-  self.settings.set(settings);
 });
 
 Template.MeteorTable.events({
-  // some event
+  // some events
 });
 
 Template.MeteorTable.helpers({
+  settings: function () {
+    // We take this reference to TableHeader and TableFooter components
+    return Template.instance().settings;
+  },
   documents: function () {
     return Template.instance().getData();
   },
   template: function () {
     return Template.instance().settings.get().template;
   },
-  settings: function () {
-    // console.log(Template.instance().settings.get());
-    return Template.instance().settings;
-  },
   headers: function () {
-    let settings = Template.instance().data.settings;
+    let fields = Template.instance().fields.get();
 
-    return settings.fields.map(f => f.title);
+    return fields.map(f => f.title);
   }
 });
