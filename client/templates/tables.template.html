@@ -1,7 +1,7 @@
 <template name="MeteorTable">
 
   {{#with settings}}
-    {{> TableHeader}}
+    {{> TableHeader settings=settings}}
   {{/with}}
 
   <table class="table table-hover">
@@ -19,8 +19,6 @@
     </tbody>
   </table>
 
-  {{#with settings}}
-    {{> TableFooter}}
-  {{/with}}
+  {{> TableFooter settings=settings selector=selector result=result}}
   
 </template>
