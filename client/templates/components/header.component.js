@@ -36,6 +36,11 @@ Template.TableHeader.events({
       );
       
       instance.selector.set(selector);
+        
+      // resets page
+      let settings = instance.settings.get();
+      settings.current.page = 1;
+      instance.settings.set(settings);
     }, 500);
   },
   'click li[role="presentation"] > a': function (e, template) {
@@ -45,6 +50,7 @@ Template.TableHeader.events({
     
     let settings = Template.instance().settings.get();
     settings.current.entry = entry;
+    settings.current.page = 1;
     
     Template.instance().settings.set(settings);
   }

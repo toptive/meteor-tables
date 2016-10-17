@@ -9,10 +9,11 @@ Template.MeteorTable.onCreated(function () {
   self.settings = new ReactiveVar({
     table_id: data.table_id,
     template: Tables.registered[data.table_id].template,
-    entries: [5, 10, 25, 50, 100],
+    entries: [5, 10, 25, 50, 100], // TODO make this customizable
     current: {
       entry: 5,
-      page: 1
+      page: 1,
+      sort: Tables.registered[data.table_id].default_sort
     }
   });
 
@@ -28,7 +29,8 @@ Template.MeteorTable.onCreated(function () {
     self.options.set({
       fields: Helpers.generateFieldsFilter(self.fields.get(), Tables.registered[data.table_id].extra_fields),
       limit: settings.current.entry,
-      skip: settings.current.page * settings.current.entry - settings.current.entry
+      skip: settings.current.page * settings.current.entry - settings.current.entry,
+      sort: settings.current.sort
     });
   });
 
@@ -76,8 +78,6 @@ Template.MeteorTable.helpers({
     return Template.instance().settings.get().template;
   },
   table_headers: function () {
-    let fields = Template.instance().fields.get();
-
-    return fields.map(f => f.title);
+    return Template.instance().fields.get();
   }
 });
