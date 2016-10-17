@@ -45,6 +45,7 @@ Template.TableHeader.events({
     
     let settings = Template.instance().settings.get();
     settings.current.entry = entry;
+    settings.current.page = 1;
     
     Template.instance().settings.set(settings);
   }
