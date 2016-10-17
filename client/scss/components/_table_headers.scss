@@ -1,0 +1,23 @@
+table thead tr th {
+  &.sorting {
+    cursor: pointer;
+    white-space: nowrap;
+
+    &:after {
+      font: normal normal normal 14px/1 FontAwesome;
+      content: "\f0dc";
+      margin-left: 8px;
+      color: rgba(50, 50, 50, 0.5);
+    }
+
+    &.sorting-asc:after {
+      color: #000;
+      content: "\f0de";
+    }
+
+    &.sorting-desc:after {
+      color: #000;
+      content: "\f0dd";
+    }
+  }
+}

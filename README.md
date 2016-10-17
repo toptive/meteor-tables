@@ -32,13 +32,21 @@ ExampleController = RouteController.extend({
   data: function () {
     return {
       table_settings: {
+        table_id: 'incomplete_profiles_table',
         publication: 'incomplete_profiles_table',
         template: 'incomplete_user_row',
         collection: SomeCollectionHere,
-        selector: {
+        // optional
+        selector: new ReactiveVar({
           age: {$gt: 25}
+        }),
+        // optional
+        extra_fields: ['deleted'],
+        // optional
+        default_sort: {
+          firstname: -1
         },
-        fields: [
+        fields: new ReactiveVar([
           { data: 'username', title: 'User' },
           { data: 'firstname', title: 'Name' },
           { data: 'email', title: 'Contact Email' },
@@ -52,7 +60,7 @@ ExampleController = RouteController.extend({
           { data: 'sex', title: 'Gender' },
           { data: 'race', title: 'Race' },
           { data: 'statusProfile', title: 'Status Profile' }      
-        ]
+        ])
       }
     }
   }

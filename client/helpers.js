@@ -35,3 +35,15 @@ Helpers.generateFieldsFilter = function (columnFields, extraFields) {
 
   return fields;
 };
+
+Helpers.generateDefaultSortingCriteria = function (columnFields) {
+  let sortColumn = columnFields.find(column => column.orderable !== false);
+
+  if (!sortColumn) return undefined;
+  else {
+    let sort = {};
+    sort[sortColumn.data] = 1;
+
+    return sort;
+  }
+};

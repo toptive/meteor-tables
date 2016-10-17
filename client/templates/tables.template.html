@@ -5,8 +5,8 @@
   <table class="table table-hover">
     <thead>
       <tr>
-        {{#each item in table_headers}}
-          <th style="white-space: nowrap">{{item}}</th>
+        {{#each column in table_headers}}
+          {{> table_header settings=settings column=column}}
         {{/each}}
       </tr>
     </thead>
