@@ -3,9 +3,12 @@ Template.MeteorTable.onCreated(function () {
   
   let data = Template.currentData().settings;
 
+  Tables.registerTable(data);
+  
   // TODO load state from localstorage, maybe Session would be better
   self.settings = new ReactiveVar({
-    template: data.template,
+    table_id: data.table_id,
+    template: Tables.registered[data.table_id].template,
     entries: [5, 10, 25, 50, 100],
     current: {
       entry: 5,
@@ -14,8 +17,8 @@ Template.MeteorTable.onCreated(function () {
   });
 
   // Taking ReactiveVar references
-  self.fields = data.fields;
-  self.selector = data.selector || new ReactiveVar({});
+  self.fields = Tables.registered[data.table_id].fields;
+  self.selector = Tables.registered[data.table_id].selector;
   self.options = new ReactiveVar({});
   self.queryResult = new ReactiveVar(0);
 
@@ -23,21 +26,22 @@ Template.MeteorTable.onCreated(function () {
     let settings = self.settings.get();
 
     self.options.set({
-      fields: self.fields.get().reduce((o, e) => { o[e.data] = 1; return o; }, {}),
+      fields: Helpers.generateFieldsFilter(self.fields.get(), Tables.registered[data.table_id].extra_fields),
       limit: settings.current.entry,
       skip: settings.current.page * settings.current.entry - settings.current.entry
     });
   });
 
   self.autorun(function () {
-    self.subscribe(data.publication, self.selector.get(), self.options.get());
+    self.subscribe(Tables.registered[data.table_id].pub, self.selector.get(), self.options.get());
   });
 
   self.getData = function () {
+    let cursor = Tables.registered[data.table_id].collection.find(self.selector.get());
 
-    self.queryResult.set(data.collection.find(self.selector.get()).count());
+    self.queryResult.set(cursor.count());
 
-    return data.collection.find(self.selector.get());
+    return cursor;
   }
 });
 
@@ -71,7 +75,7 @@ Template.MeteorTable.helpers({
   template: function () {
     return Template.instance().settings.get().template;
   },
-  headers: function () {
+  table_headers: function () {
     let fields = Template.instance().fields.get();
 
     return fields.map(f => f.title);

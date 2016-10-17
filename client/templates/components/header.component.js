@@ -28,14 +28,14 @@ Template.TableHeader.events({
 
     timeoutId = setTimeout(function () {
       let searchString = e.currentTarget.value;
-        
-        let selector = Helpers.generateSearchFilter(
-          instance.selector.get(),
-          instance.fields.get(),
-          searchString
-        );
-        
-        instance.selector.set(selector);
+      
+      let selector = Helpers.generateSearchFilter(
+        instance.selector.get(),
+        instance.fields.get(),
+        searchString
+      );
+      
+      instance.selector.set(selector);
     }, 500);
   },
   'click li[role="presentation"] > a': function (e, template) {
