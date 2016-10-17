@@ -13,16 +13,16 @@ Package.onUse(function (api) {
   api.use([
     'jquery',
     'check',
-    'underscore',
     'mongo',
     'blaze',
     'templating',
     'reactive-var',
     'tracker',
     'tmeasday:publish-counts',
-    'numeral:numeral'
+    'numeral:numeral@1.5.3_1',
+    'fortawesome:fontawesome@4.6.3',
+    'fourseven:scss@3.8.1'
   ]);
-
 
   api.addFiles('lib/tables.js', both);
 
@@ -30,12 +30,15 @@ Package.onUse(function (api) {
   
   api.addFiles([
     'client/lib/simplePagination.js',
+    'client/templates/components/table-header.component.html',
+    'client/templates/components/table-header.component.js',
     'client/templates/components/header.component.html',
     'client/templates/components/header.component.js',
     'client/templates/components/footer.component.html',
     'client/templates/components/footer.component.js',
     'client/templates/tables.template.html',
     'client/templates/tables.template.js',
+    'client/scss/main.scss',
     'client/helpers.js',
     'client/records.js',
     'client/init.js'

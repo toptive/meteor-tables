@@ -25,11 +25,9 @@ Template.TableFooter.onRendered(function () {
     settings = self.settings.get();
     let totalElementsFound = Counts.get('total_elems_'.concat(settings.table_id));
     
-    // TODO FIX pagination limit when entry gets higher
-    // 
     self.$('.pagination').pagination({
       items: totalElementsFound,
-      currentPage: settings.current.page, // TODO this has to change dinamically
+      currentPage: settings.current.page,
       itemsOnPage: settings.current.entry,
       displayedPages: 3,
       edges: 1,
