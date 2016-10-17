@@ -6,7 +6,13 @@ Template.TableFooter.onCreated(function () {
   self.queryResult = self.data.result;
 
   self.autorun(function () {
-    self.subscribe('tables.collection.info', self.selector.get());
+    let table_id = self.settings.get().table_id;
+    
+    self.subscribe('tables.collection.info', 
+      table_id, 
+      Tables.registered[table_id].collection._name, 
+      self.selector.get()
+    );
   });
 });
 
@@ -17,11 +23,13 @@ Template.TableFooter.onRendered(function () {
 
   self.autorun(function () {
     settings = self.settings.get();
+    let totalElementsFound = Counts.get('total_elems_'.concat(settings.table_id));
+    
     // TODO FIX pagination limit when entry gets higher
     // 
     self.$('.pagination').pagination({
-      items: Counts.get('total_elems'),
-      currentPage: settings.current.page,
+      items: totalElementsFound,
+      currentPage: settings.current.page, // TODO this has to change dinamically
       itemsOnPage: settings.current.entry,
       displayedPages: 3,
       edges: 1,
@@ -49,10 +57,11 @@ Template.TableFooter.helpers({
 
     let offsetPage = settings.current.entry * (settings.current.page - 1) + 1;
     let itemsFound = offsetPage + Template.instance().queryResult.get() - 1;
+
     return {
       beginPage: Math.min(offsetPage, itemsFound),
       endPage: itemsFound,
-      total: Counts.get('total_elems')
+      total: Counts.get('total_elems_'.concat(settings.table_id))
     };
   }
 })
