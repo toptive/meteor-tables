@@ -40,8 +40,7 @@ Package.onUse(function (api) {
     'client/templates/tables.template.js',
     'client/scss/main.scss',
     'client/helpers.js',
-    'client/records.js',
-    'client/init.js'
+    'client/records.js'
   ], 'client');
 
   api.export('Tables');
