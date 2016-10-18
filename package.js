@@ -38,6 +38,9 @@ Package.onUse(function (api) {
     'client/templates/components/footer.component.js',
     'client/templates/tables.template.html',
     'client/templates/tables.template.js',
+    'client/scss/components/_table_headers.scss',
+    'client/scss/components/_header.scss',
+    'client/scss/components/_footer.scss',
     'client/scss/main.scss',
     'client/helpers.js',
     'client/records.js'

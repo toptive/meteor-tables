@@ -47,10 +47,10 @@ Template.TableFooter.onRendered(function () {
 });
 
 Template.TableFooter.helpers({
-  formatNumber: function (number) {
+  formatNumber: (number) => {
     return numeral(number).format('0,0');
   },
-  result: function () {
+  result: () => {
     let settings = Template.instance().settings.get();
 
     let offsetPage = settings.current.entry * (settings.current.page - 1) + 1;

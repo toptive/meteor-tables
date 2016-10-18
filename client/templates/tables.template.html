@@ -11,9 +11,11 @@
       </tr>
     </thead>
     <tbody>
-      {{#each documents}}
-        {{> Template.dynamic template=template }}
-      {{/each}}
+      {{#if Template.subscriptionsReady}}
+        {{#each documents}}
+          {{> Template.dynamic template=template }}
+        {{/each}}
+      {{/if}}
     </tbody>
   </table>
 

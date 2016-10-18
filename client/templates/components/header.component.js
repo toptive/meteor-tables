@@ -34,6 +34,7 @@ Template.TableHeader.events({
       // resets page
       let settings = instance.settings.get();
       settings.current.page = 1;
+      settings.current.search_string = searchString;
       instance.settings.set(settings);
     }, 500);
   },
