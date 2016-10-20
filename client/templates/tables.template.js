@@ -5,14 +5,17 @@ Template.MeteorTable.onCreated(function () {
 
   const TABLE = Tables.registerTable(data);
   
+  let state = TABLE.state_save ? Helpers.loadState(data.table_id) : null;
+
   self.settings = new ReactiveVar({
     table_id: data.table_id,
     template: TABLE.template,
     entries: [5, 10, 25, 50, 100], // TODO make this customizable
     current: {
-      entry: 5,
-      page: 1,
-      sort: TABLE.default_sort
+      entry: state ? state.length : 5,
+      page: state ? state.start : 1,
+      sort: state ? state.order : TABLE.default_sort,
+      search_string: state ? state.search : ''
     }
   });
 
@@ -40,8 +43,17 @@ Template.MeteorTable.onCreated(function () {
   self.autorun(function () {
     let settings = self.settings.get();
 
-    if (TABLE.save_state)
-      Helpers.saveSate(data.table_id, settings);
+    if (TABLE.state_save) {
+      let state = {
+        time: +new Date(),
+        start: settings.current.page,
+        length: settings.current.entry,
+        order: settings.current.sort,
+        search: settings.current.search_string
+      };
+
+      Helpers.saveSate(data.table_id, state);
+    }
   });
 
   self.getData = function () {
