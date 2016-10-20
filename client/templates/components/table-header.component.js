@@ -27,7 +27,7 @@ Template.table_header.events({
 });
 
 Template.table_header.helpers({
-  column: function () {
+  column: () => {
     let column = Template.instance().column;
 
     return {
@@ -36,7 +36,7 @@ Template.table_header.helpers({
     };
   },
   // updates the view
-  sortingClass: function (column) {
+  sortingClass: (column) => {
     let settings = Template.instance().settings.get();
 
     if (!column.data) return '';

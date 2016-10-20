@@ -47,3 +47,13 @@ Helpers.generateDefaultSortingCriteria = function (columnFields) {
     return sort;
   }
 };
+
+Helpers.saveSate = function (table_id, settings) {
+  window.localStorage.setItem(table_id, JSON.stringify(settings));
+};
+
+Helpers.loadState = function (table_id) {
+  let settings = window.localStorage.getItem(table_id);
+
+  return JSON.parse(settings);
+};

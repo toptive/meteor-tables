@@ -8,12 +8,6 @@ Template.TableHeader.onCreated(function () {
 
 Template.TableHeader.onRendered(function () {
   let self = this;
-
-  // self.autorun(function (c) {
-  //   let settings = self.settings.get();
-
-  //   Session.set(self.settings.tableName, self.settings);
-  // });
 });
 
 var timeoutId;
@@ -40,6 +34,7 @@ Template.TableHeader.events({
       // resets page
       let settings = instance.settings.get();
       settings.current.page = 1;
+      settings.current.search_string = searchString;
       instance.settings.set(settings);
     }, 500);
   },

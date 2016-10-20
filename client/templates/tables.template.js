@@ -3,23 +3,25 @@ Template.MeteorTable.onCreated(function () {
   
   let data = Template.currentData().settings;
 
-  Tables.registerTable(data);
+  const TABLE = Tables.registerTable(data);
   
-  // TODO load state from localstorage, maybe Session would be better
+  let state = TABLE.state_save ? Helpers.loadState(data.table_id) : null;
+
   self.settings = new ReactiveVar({
     table_id: data.table_id,
-    template: Tables.registered[data.table_id].template,
+    template: TABLE.template,
     entries: [5, 10, 25, 50, 100], // TODO make this customizable
     current: {
-      entry: 5,
-      page: 1,
-      sort: Tables.registered[data.table_id].default_sort
+      entry: state ? state.length : 5,
+      page: state ? state.start : 1,
+      sort: state ? state.order : TABLE.default_sort,
+      search_string: state ? state.search : ''
     }
   });
 
   // Taking ReactiveVar references
-  self.fields = Tables.registered[data.table_id].fields;
-  self.selector = Tables.registered[data.table_id].selector;
+  self.fields = TABLE.fields;
+  self.selector = TABLE.selector;
   self.options = new ReactiveVar({});
   self.queryResult = new ReactiveVar(0);
 
@@ -27,7 +29,7 @@ Template.MeteorTable.onCreated(function () {
     let settings = self.settings.get();
 
     self.options.set({
-      fields: Helpers.generateFieldsFilter(self.fields.get(), Tables.registered[data.table_id].extra_fields),
+      fields: Helpers.generateFieldsFilter(self.fields.get(), TABLE.extra_fields),
       limit: settings.current.entry,
       skip: settings.current.page * settings.current.entry - settings.current.entry,
       sort: settings.current.sort
@@ -35,11 +37,27 @@ Template.MeteorTable.onCreated(function () {
   });
 
   self.autorun(function () {
-    self.subscribe(Tables.registered[data.table_id].pub, self.selector.get(), self.options.get());
+    self.subscribe(TABLE.pub, self.selector.get(), self.options.get());
+  });
+  
+  self.autorun(function () {
+    let settings = self.settings.get();
+
+    if (TABLE.state_save) {
+      let state = {
+        time: +new Date(),
+        start: settings.current.page,
+        length: settings.current.entry,
+        order: settings.current.sort,
+        search: settings.current.search_string
+      };
+
+      Helpers.saveSate(data.table_id, state);
+    }
   });
 
   self.getData = function () {
-    let cursor = Tables.registered[data.table_id].collection.find(self.selector.get());
+    let cursor = TABLE.collection.find(self.selector.get());
 
     self.queryResult.set(cursor.count());
 
@@ -56,28 +74,28 @@ Template.MeteorTable.events({
 });
 
 Template.MeteorTable.helpers({
-  settings: function () {
+  settings: () => {
     // We take this reference to TableHeader and TableFooter components
     return Template.instance().settings;
   },
-  selector: function () {
+  selector: () => {
     // We take this reference to TableFooter component
     return Template.instance().selector;
   },
-  fields: function () {
+  fields: () => {
     // We take this reference to TableHeader component
     return Template.instance().fields;
   },
-  result: function () {
+  result: () => {
     return Template.instance().queryResult;
   },
-  documents: function () {
+  documents: () => {
     return Template.instance().getData();
   },
-  template: function () {
+  template: () => {
     return Template.instance().settings.get().template;
   },
-  table_headers: function () {
+  table_headers: () => {
     return Template.instance().fields.get();
   }
 });
