@@ -32,8 +32,8 @@ Coming soon :stuck_out_tongue_winking_eye:
 - [ ] Setup table settings inside of some controller/template
 ```javascript
 // We are using Iron Router here, but you can provide the table settings righ in the template
-ExampleController = RouteController.extend({
-  template: 'example_template',
+IncompleteTodosController = RouteController.extend({
+  template: 'my_incomplete_todos',
   data: function () {
     return {
       table_settings: {
