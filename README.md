@@ -37,15 +37,17 @@ ExampleController = RouteController.extend({
         template: 'incomplete_user_row',
         collection: SomeCollectionHere,
         // optional
-        selector: new ReactiveVar({
+        selector: {
           age: {$gt: 25}
-        }),
+        },
         // optional
         extra_fields: ['deleted'],
         // optional
         default_sort: {
           firstname: -1
         },
+        // optional
+        state_save: true,
         fields: new ReactiveVar([
           { data: 'username', title: 'User' },
           { data: 'firstname', title: 'Name' },

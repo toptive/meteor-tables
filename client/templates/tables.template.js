@@ -21,9 +21,20 @@ Template.MeteorTable.onCreated(function () {
 
   // Taking ReactiveVar references
   self.fields = TABLE.fields;
-  self.selector = TABLE.selector;
+  self.selector = new ReactiveVar(
+    Helpers.generateSearchFilter(
+      TABLE.selector,
+      TABLE.fields.get(),
+      state ? state.search : ''
+    )
+  );
   self.options = new ReactiveVar({});
+  self.filter = new ReactiveVar({});
   self.queryResult = new ReactiveVar(0);
+
+  self.autorun(function () {
+    self.filter.set(Template.currentData().filter || {});
+  });
 
   self.autorun(function () {
     let settings = self.settings.get();
@@ -49,7 +60,7 @@ Template.MeteorTable.onCreated(function () {
         start: settings.current.page,
         length: settings.current.entry,
         order: settings.current.sort,
-        search: settings.current.search_string
+        search: settings.current.search_string || ''
       };
 
       Helpers.saveSate(data.table_id, state);
@@ -85,6 +96,10 @@ Template.MeteorTable.helpers({
   fields: () => {
     // We take this reference to TableHeader component
     return Template.instance().fields;
+  },
+  filter: () => {
+    // We take this reference to TableHeader component
+    return Template.instance().filter;
   },
   result: () => {
     return Template.instance().queryResult;
