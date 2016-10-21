@@ -5,7 +5,7 @@
 
 Helpers = {};
 
-Helpers.generateSearchFilter = function (selector, columns, searchString) {
+Helpers.generateSearchFilter = function (selector, columns, searchString, filter) {
   let conjunction = ('$and' in selector ) ? selector : {$and: [selector]};
 
   let disjunction = {$or: []};
@@ -22,6 +22,7 @@ Helpers.generateSearchFilter = function (selector, columns, searchString) {
     });
 
   conjunction['$and'][1] = disjunction;
+  if (filter instanceof Object) conjunction['$and'][2] = filter;
 
   return conjunction;
 };

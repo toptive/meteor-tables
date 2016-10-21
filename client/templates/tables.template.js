@@ -29,7 +29,12 @@ Template.MeteorTable.onCreated(function () {
     )
   );
   self.options = new ReactiveVar({});
+  self.filter = new ReactiveVar({});
   self.queryResult = new ReactiveVar(0);
+
+  self.autorun(function () {
+    self.filter.set(Template.currentData().filter || {});
+  });
 
   self.autorun(function () {
     let settings = self.settings.get();
@@ -91,6 +96,10 @@ Template.MeteorTable.helpers({
   fields: () => {
     // We take this reference to TableHeader component
     return Template.instance().fields;
+  },
+  filter: () => {
+    // We take this reference to TableHeader component
+    return Template.instance().filter;
   },
   result: () => {
     return Template.instance().queryResult;

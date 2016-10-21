@@ -4,6 +4,30 @@ Template.TableHeader.onCreated(function () {
   self.settings = self.data.settings;
   self.selector = self.data.selector;
   self.fields = self.data.fields;
+  self.filter = self.data.filter;
+
+  self.search = new ReactiveVar(self.settings.get().current.search_string);
+
+  self.autorun(function () {
+    let searchString = self.search.get();
+    let filter = self.filter.get();
+    let settings = Tracker.nonreactive(() => self.settings.get());
+    
+    let selector = Helpers.generateSearchFilter(
+      Tracker.nonreactive(() => self.selector.get()),
+      self.fields.get(),
+      searchString,
+      filter
+    );
+    
+    self.selector.set(selector);
+      
+    if (settings.current.search_string !== searchString) {
+      settings.current.page = 1;
+      settings.current.search_string = searchString;
+      self.settings.set(settings);
+    }
+  });
 });
 
 Template.TableHeader.onRendered(function () {
@@ -17,25 +41,11 @@ Template.TableHeader.events({
     e.preventDefault();
     
     let instance = Template.instance();
-    
+
     clearTimeout(timeoutId);
 
-    timeoutId = setTimeout(function () {
-      let searchString = e.currentTarget.value;
-      
-      let selector = Helpers.generateSearchFilter(
-        instance.selector.get(),
-        instance.fields.get(),
-        searchString
-      );
-      
-      instance.selector.set(selector);
-        
-      // resets page
-      let settings = instance.settings.get();
-      settings.current.page = 1;
-      settings.current.search_string = searchString;
-      instance.settings.set(settings);
+    timeoutId = setTimeout(function () {      
+      instance.search.set(e.currentTarget.value);
     }, 500);
   },
   'click li[role="presentation"] > a': function (e, template) {
