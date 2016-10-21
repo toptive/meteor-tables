@@ -19,7 +19,7 @@ Package.onUse(function (api) {
     'templating',
     'reactive-var',
     'tracker',
-    'tmeasday:publish-counts',
+    'tmeasday:publish-counts@0.8.0',
     'numeral:numeral@1.5.3_1',
     'fortawesome:fontawesome@4.6.3',
     'fourseven:scss@3.8.1'
