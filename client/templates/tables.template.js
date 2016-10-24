@@ -10,9 +10,9 @@ Template.MeteorTable.onCreated(function () {
   self.settings = new ReactiveVar({
     table_id: data.table_id,
     template: TABLE.template,
-    entries: [5, 10, 25, 50, 100], // TODO make this customizable
+    entries: TABLE.entries,
     current: {
-      entry: state ? state.length : 5,
+      entry: state ? state.length : TABLE.entries[0],
       page: state ? state.start : 1,
       sort: state ? state.order : TABLE.default_sort,
       search_string: state ? state.search : ''
@@ -20,11 +20,11 @@ Template.MeteorTable.onCreated(function () {
   });
 
   // Taking ReactiveVar references
-  self.fields = TABLE.fields;
+  self.fields = new ReactiveVar(TABLE.fields);
   self.selector = new ReactiveVar(
     Helpers.generateSearchFilter(
       TABLE.selector,
-      TABLE.fields.get(),
+      TABLE.fields,
       state ? state.search : ''
     )
   );

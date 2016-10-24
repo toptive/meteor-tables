@@ -1,4 +1,6 @@
 table thead tr th {
+  white-space: nowrap;
+
   &.sorting {
     cursor: pointer;
     white-space: nowrap;

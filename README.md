@@ -2,6 +2,7 @@ qactivo:meteor-tables
 =====================
 
 A Meteor package that creates reactive DataTables (not the [DataTables](http://datatables.net/)) in an efficient way, allowing you to display custom contents of enormous collections without impacting app performance.
+This package is designed to work with Twitter Bootstrap 3.
 
 ## Installation
 
@@ -13,13 +14,37 @@ $ meteor add qactivo:meteor-tables
 
 Coming soon :stuck_out_tongue_winking_eye:
 
-## Example
+## Motivation
+
+We found ourselves we the need of Data tables easily to customize and some features we didn't found on any meteor package out there:
+
+* We wanted to take full control of what and how data is published to the client.
+* We wanted to decouple each table row from **MeteorTable** to get a self-contained blaze component, this allow to main things:
+  * Customize row events using [Blaze template events](http://blazejs.org/api/templates.html#Template-events).
+  * Customize how data is displayed using [Blaze template helpers](http://blazejs.org/api/templates.html#Template-helpers).
+* The ability to save any table state (sorting, table lengh, etc.).
+* The ability to render columns dinamically (Still in development).
+* The ability to inject into the template a filter selector that will be used both client and server side reactivelly!.
+* We wanted to write a package easy to adapt and extend.
+
+## How to use (Example)
 
 ### Client
 
+- [ ] Inject the **MeteorTable** to the html template:
+
+```html
+<template name="my_todos_template">
+  <h2>Todos</h2>
+  
+  // see Template options below to more details
+  {{> MeteorTable settings=table_settings}}
+</template>
+```
+
 - [ ] Create a new template to render each one of the elements of the published collection (mandatory for now)
 ```html
-<template name="incomplete_todo_row">
+<template name="todo_row">
   <tr>
     <td>{{_id}}</td>
     <td>{{title}}</td>
@@ -32,18 +57,20 @@ Coming soon :stuck_out_tongue_winking_eye:
 - [ ] Setup table settings inside of some controller/template
 ```javascript
 // We are using Iron Router here, but you can provide the table settings righ in the template
-IncompleteTodosController = RouteController.extend({
-  template: 'my_incomplete_todos',
+TodosController = RouteController.extend({
+  template: 'my_todos_template',
   data: function () {
     return {
       table_settings: {
-        table_id: 'incomplete_todos_table',
-        publication: 'incomplete_todos_table_pub',
-        template: 'incomplete_todo_row',
+        table_id: 'todos_table',
+        publication: 'todos_table_pub',
+        // this the template created before
+        template: 'todo_row',
         collection: Todos,
-        fields: new ReactiveVar([
-          { data: '_id', title: 'User' },
+        fields: [
+          { data: '_id', title: 'ID' },
           {
+            // this column will not be able to sort or search on it
             orderable: false,
             searchable: false,
             data: 'title', 
@@ -51,28 +78,21 @@ IncompleteTodosController = RouteController.extend({
           },
           { data: 'description', title: 'Description' },
           { data: 'created_at', title: 'Created' }  
-        ])
+        ]
       }
     }
   }
 });
 ```
 
-- [ ] Finally, inject the **MeteorTable** to the html template
-
-```html
-<template name="my_incomplete_todos">
-  <h2 class="page-header">Incomplete todos</h2>
-
-  {{> MeteorTable settings=table_settings}}
-</template>
-```
-
 ### Server 
 
-- [ ] Create a publication with the following params
+- [ ] Create a classic Meteor publication as follows (mandatory for now):
+* MUST accept two arguments: `selector`, and `options`.
+* MAY also publish other data necessary for your table.
+
 ```javascript
-Meteor.publish('incomplete_todos_table_pub', function (selector, options) {
+Meteor.publish('todos_table_pub', function (selector, options) {
   var query = {
     $and: [
       // custom selector
@@ -88,6 +108,10 @@ Meteor.publish('incomplete_todos_table_pub', function (selector, options) {
 });
 ```
 
+As you can notice, we can make this publication as complex as we need.
+
+That's it, easy huh?
+
 ## Displaying Only Part of a Collection's Data Set
 
 Add a [Mongo-style selector](https://docs.meteor.com/#/full/selectors) to your `MeteorTable` component for a table that displays only one part of a collection:
@@ -97,7 +121,7 @@ Add a [Mongo-style selector](https://docs.meteor.com/#/full/selectors) to your `
 ```
 
 ```js
-Template.my_incomplete_todos.helpers({
+Template.my_todos_template.helpers({
   selector: function () {    
     var query = {};
     
@@ -146,7 +170,7 @@ table_settings: {
 
 Should you require the current state of pagination, sorting, search, etc to be saved you can use the option `state_save`.
 
-Add `state_save` as a property when defining the Datatable.
+Add `state_save` as a property when defining the **MeteorTable**.
 
 ```js
 table_settings: {
@@ -155,9 +179,14 @@ table_settings: {
 }
 ```
 
+Data storage for the state information in the browser is performed by use of the `localStorage` or sessionStorage HTML5 APIs.
+To be able to uniquely identify each table's state data, information is stored using the `table_id` used on the table settings. If this id changes, the state information will be lost.
+
+Please note that the use of the HTML5 APIs for data storage means that the built in state saving option will not work with IE6/7 as these browsers do not support these APIs.
+
 ## Default column order
 
-Unless there is a saved state, you can provide to MeteorTable your desired column sort using the `default_sort` option:
+Unless there is a saved state, you can provide to **MeteorTable** your desired column sort using the `default_sort` option:
 
 ```js
 table_settings: {
@@ -167,33 +196,32 @@ table_settings: {
   }
 }
 ```
-If you don't specify any order criteria, by default MeteorTable will take the first non-searchable column or will not apply sorting at all.
+If you don't specify any order criteria, by default **MeteorTable** will take the first non-searchable column or will not apply sorting at all.
 
-## Using a Custom Publish Function (mandatory for now)
+## Specify select entries
 
-To tell MeteorTable to use your custom publish function, pass the publication name as the `publication` option. Your function:
-
-* MUST accept and two arguments: `selector`, and `options`
-* MAY also publish other data necessary for your table
-
-for example:
+Customize the select length menu displayed by **MeteorTable** using the `entries` option:
 
 ```js
-if (Meteor.isServer) {
-  Meteor.publish('incomplete_todos_table', function (selector, options) {
-    var query = {
-      $and: [
-        {
-          completed: false,
-          created_at: {
-            $gt: new Date('2016-02-02')
-          }
-        },
-        selector
-      ]
-    };
-    
-    return Todos.find(query, options);
-  });
+table_settings: {
+  ... // other properties ...
+  entries: [10, 20, 30]
 }
 ```
+
+The value displayed is the value used to display items on the table.
+
+## Template options
+
+| Property                  | Type             | Details                                                                                         |
+|---------------------------|------------------|-------------------------------------------------------------------------------------------------|
+| `table_id`                | string           | Table indentifier.                                                                              |
+| `publication`             | string           | Publication name, **MeteorTable** will subscribe to this publication.                           |
+| `template`                | string           | Template name to be used to render each one of the items found as table's row.                  |
+| `collection`              | Mongo.Collection | Mongo collection used to fetch data.                                                            |
+| `fields`                  | ReactiveVar      | Columns to be rendered by **MeteorTable** : <ul><li>`title` - column name.</li><li>`data`- collection property.</li><li>`orderable`- whether or not the column should be orderable (default `true`).</li><li>`searchable`- whether or not the column should be searchable (default `true`).</li>  |
+| `entries` (optional)      | array            | This parameter allows you to specify the length options that **MeteorTable** shows at top left of the table (default `[10, 25, 50, 100]`).         |
+| `selector` (optional)     | object           | A [Mongo-style selector](https://docs.meteor.com/#/full/selectors) to filter both client and server side data. |
+| `extra_fields` (optional) | array            | Array of collection properties to be published to the client.                                   |
+| `default_sort` (optional) | object           | A [Mongo-style sort](https://docs.meteor.com/api/collections.html#sortspecifiers) for initial column sort (by default will take the first column non-orderable). Only `Object` style sort is supported!.                      |
+| `state_save` (optional)   | boolean          | Enable or disable state saving. When enabled **MeteorTable** will store state information such as pagination position, display length, filtering and sorting (default `false`).   |
