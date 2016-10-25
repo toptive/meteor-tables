@@ -37,7 +37,7 @@ We found ourselves we the need of Data tables easily to customize and some featu
 <template name="my_todos_template">
   <h2>Todos</h2>
   
-  // see Template options below to more details
+  // see Template options below to get more details
   {{> MeteorTable settings=table_settings}}
 </template>
 ```
@@ -219,7 +219,7 @@ The value displayed is the value used to display items on the table.
 | `publication`             | string           | Publication name, **MeteorTable** will subscribe to this publication.                           |
 | `template`                | string           | Template name to be used to render each one of the items found as table's row.                  |
 | `collection`              | Mongo.Collection | Mongo collection used to fetch data.                                                            |
-| `fields`                  | ReactiveVar      | Columns to be rendered by **MeteorTable** : <ul><li>`title` - column name.</li><li>`data`- collection property.</li><li>`orderable`- whether or not the column should be orderable (default `true`).</li><li>`searchable`- whether or not the column should be searchable (default `true`).</li>  |
+| `fields`                  | array      | Columns to be rendered by **MeteorTable** : <ul><li>`title` - column name.</li><li>`data`- collection property.</li><li>`orderable`- whether or not the column should be orderable (default `true`).</li><li>`searchable`- whether or not the column should be searchable (default `true`).</li>  |
 | `entries` (optional)      | array            | This parameter allows you to specify the length options that **MeteorTable** shows at top left of the table (default `[10, 25, 50, 100]`).         |
 | `selector` (optional)     | object           | A [Mongo-style selector](https://docs.meteor.com/#/full/selectors) to filter both client and server side data. |
 | `extra_fields` (optional) | array            | Array of collection properties to be published to the client.                                   |
