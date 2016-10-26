@@ -5,8 +5,8 @@
       
       <ul class="nav nav-pills">
         Show&nbsp;
-        {{#each option in settings.entries}} 
-          <li class="{{selectedEntry option}}" role="presentation"><a href="#" data-entry="{{option}}">{{option}}</a></li>
+        {{#each item in settings.entries}}
+          <li class="{{selectedEntry item}}" role="presentation"><a href="#" data-entry="{{item}}">{{item}}</a></li>
         {{/each}}
         &nbsp;entries
       </ul>

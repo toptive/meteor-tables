@@ -2,7 +2,7 @@ Package.describe({
   name: 'qactivo:meteor-tables',
   summary: 'Reactive tables for large or small datasets in Meteor',
   git: 'https://github.com/QActivo/meteor-tables.git',
-  version: '1.0.1'
+  version: '1.0.4'
 });
 
 Package.onUse(function (api) {
@@ -15,8 +15,7 @@ Package.onUse(function (api) {
     'jquery',
     'check',
     'mongo',
-    'blaze',
-    'templating',
+    'templating@1.2.15',
     'reactive-var',
     'tracker',
     'tmeasday:publish-counts@0.8.0',
