@@ -28,6 +28,9 @@ Template.TableHeader.onCreated(function () {
       self.settings.set(settings);
     }
   });
+
+  if (self.settings.get().session_id) 
+    Session.set(self.settings.get().session_id, []);
 });
 
 Template.TableHeader.onRendered(function () {
@@ -58,6 +61,32 @@ Template.TableHeader.events({
     settings.current.page = 1;
     
     Template.instance().settings.set(settings);
+  },
+  'click ul[aria-labelledby="extra-columns"] > li': function (e, template) {
+    e.preventDefault();
+
+    let data = e.currentTarget.dataset;
+    let settings = Template.instance().settings.get();
+
+    let column = {};
+    column['data'] = data.field;
+    column['title'] = data.name;
+    column['removable'] = true;
+
+    if ('orderable' in data) column['orderable'] = eval(data.orderable);
+    if ('searchable' in data) column['searchable'] = eval(data.searchable);
+
+    // update Table headers
+    let fields = Template.instance().fields.get();
+    fields.push(column);
+    Template.instance().fields.set(fields);
+
+    // add row column for the new field
+    Session.set(settings.session_id, [...Session.get(settings.session_id), ...[column]]);
+
+    // update Extra columns dropdown
+    settings.dynamic_fields.splice(settings.dynamic_fields.findIndex(e => e.data === column.data), 1);
+    Template.instance().settings.set(settings);
   }
 });
 
@@ -67,5 +96,12 @@ Template.TableHeader.helpers({
   },
   settings: () => {
     return Template.instance().settings.get();
+  },
+  getString: (v) => { 
+    try {
+      return v.toString()
+    } catch (e) {
+      return false;
+    }
   }
 });

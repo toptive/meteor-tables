@@ -1,6 +1,6 @@
 <template name="TableHeader">
 
-  <div class="row">
+  <div class="row table-header">
     <div class="col-md-6 entry-option">
       
       <ul class="nav nav-pills">
@@ -10,8 +10,27 @@
         {{/each}}
         &nbsp;entries
       </ul>
-    
+      {{#if settings.dynamic_fields}}
+        <div class="dropdown">
+          <button class="btn btn-default dropdown-toggle" type="button" id="extra-columns" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+            Extra columns
+            <span class="caret"></span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-left" aria-labelledby="extra-columns">
+            {{#each item in settings.dynamic_fields}}
+              <li 
+                data-field="{{item.data}}" 
+                data-name="{{item.title}}" 
+                data-orderable="{{getString item.orderable}}" 
+                data-searchable="{{getString item.searchable}}">
+                <a href="#">{{item.title}}</a>
+              </li>
+            {{/each}}
+          </ul>
+        </div>
+      {{/if}}
     </div>
+  
     <div class="col-md-6">
 
       <div class="form-group pull-right">

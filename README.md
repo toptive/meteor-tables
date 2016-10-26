@@ -23,7 +23,7 @@ We found ourselves we the need of Data tables easily to customize and some featu
   * Customize row events using [Blaze template events](http://blazejs.org/api/templates.html#Template-events).
   * Customize how data is displayed using [Blaze template helpers](http://blazejs.org/api/templates.html#Template-helpers).
 * The ability to save any table state (sorting, table lengh, etc.).
-* The ability to render columns dinamically (Still in development).
+* The ability to render columns dinamically.
 * The ability to inject into the template a filter selector that will be used both client and server side reactivelly!.
 * We wanted to write a package easy to adapt and extend.
 
@@ -211,6 +211,20 @@ table_settings: {
 
 The value displayed is the value used to display items on the table.
 
+## Setup fields to be rendered dynamically
+
+If don't want to see often some column, you can add it to this option. You will be able to remove it and re-add it as many times you want.
+
+```js
+table_settings: {
+  ... // other properties ...
+  dynamic_fields: [
+    { data: 'user_id', title: 'User ID' },
+    { data: 'deadline', title: 'Deadline' }
+  ]
+}
+```
+
 ## Template options
 
 | Property                  | Type             | Details                                                                                         |
@@ -225,3 +239,4 @@ The value displayed is the value used to display items on the table.
 | `extra_fields` (optional) | array            | Array of collection properties to be published to the client.                                   |
 | `default_sort` (optional) | object           | A [Mongo-style sort](https://docs.meteor.com/api/collections.html#sortspecifiers) for initial column sort (by default will take the first column non-orderable). Only `Object` style sort is supported!.                      |
 | `state_save` (optional)   | boolean          | Enable or disable state saving. When enabled **MeteorTable** will store state information such as pagination position, display length, filtering and sorting (default `false`).   |
+| `dynamic_fields` (optional)   | array          | Columns to be rendered dynamically. This option will enable a dropdown button on top of the table with all the fields specified in there. You can use the same options as used with `fields` (`searchable`, `orderable`, etc.). |
