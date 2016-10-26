@@ -5,6 +5,18 @@ Template.MeteorTable.onCreated(function () {
 
   const TABLE = Tables.registerTable(data);
   
+  Template[TABLE.template].onRendered(function () {
+    this.autorun(() => {
+      let newColumns = Session.get(TABLE.session_id);
+
+      if (newColumns) {
+        newColumns.forEach((column) => {
+          lastNode = $(this.lastNode).append($('<td>'+this.data[column.data]+'</td>'));
+        });
+      }
+    });
+  });
+
   let state = TABLE.state_save ? Helpers.loadState(data.table_id) : null;
 
   self.settings = new ReactiveVar({
@@ -16,7 +28,9 @@ Template.MeteorTable.onCreated(function () {
       page: state ? state.start : 1,
       sort: state ? state.order : TABLE.default_sort,
       search_string: state ? state.search : ''
-    }
+    },
+    dynamic_fields: TABLE.dynamic_fields,
+    session_id: TABLE.session_id
   });
 
   // Taking ReactiveVar references

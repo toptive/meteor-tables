@@ -1,3 +1,7 @@
 @import 'components/table_headers';
 @import 'components/header';
 @import 'components/footer';
+
+.table-wrapper {
+  overflow-x: scroll;
+}
