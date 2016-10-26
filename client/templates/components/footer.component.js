@@ -47,9 +47,7 @@ Template.TableFooter.onRendered(function () {
 });
 
 Template.TableFooter.helpers({
-  formatNumber: (number) => {
-    return numeral(number).format('0,0');
-  },
+  formatNumber: (number) => numeral(number).format('0,0'),
   result: () => {
     let settings = Template.instance().settings.get();
 

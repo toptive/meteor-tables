@@ -1,3 +1,8 @@
 <template name="table_header">
-  <th class="{{sortingClass column}}" data-sorting="{{column.data}}">{{column.title}}</th>
+  <th class="{{sortingClass column}}" data-sorting="{{column.data}}">
+    {{#if column.removable}} 
+      <button class="btn btn-xs btn-danger fa fa-times rm-column"></button>
+    {{/if}}
+    {{column.title}}
+  </th>
 </template>
