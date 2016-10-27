@@ -23,6 +23,7 @@ Template.TableHeader.onCreated(function () {
     self.selector.set(selector);
       
     if (settings.current.search_string !== searchString) {
+      settings.current.page = 1;
       settings.current.search_string = searchString;
       self.settings.set(settings);
     }

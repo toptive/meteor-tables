@@ -4,4 +4,8 @@
 
 .table-wrapper {
   overflow-x: scroll;
+
+  td, th {
+    white-space: nowrap;
+  }
 }
