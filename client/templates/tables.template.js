@@ -50,6 +50,15 @@ Template.MeteorTable.onCreated(function () {
     self.filter.set(Template.currentData().filter || {});
   });
 
+  // watch selector changes
+  self.autorun(function () {
+    let selector = self.selector.get();
+    let settings = Tracker.nonreactive(() => self.settings.get());
+
+    settings.current.page = 1;
+    self.settings.set(settings);
+  });
+
   self.autorun(function () {
     let settings = self.settings.get();
 

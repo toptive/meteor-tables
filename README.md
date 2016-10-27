@@ -89,26 +89,12 @@ TodosController = RouteController.extend({
 
 - [ ] Create a classic Meteor publication as follows (mandatory for now):
 * MUST accept two arguments: `selector`, and `options`.
-* MAY also publish other data necessary for your table.
 
 ```javascript
 Meteor.publish('todos_table_pub', function (selector, options) {
-  var query = {
-    $and: [
-      // custom selector
-      {
-        completed: false
-      },
-      // selector provided by MeteorTable
-      selector
-    ]
-  };
-
-  return Todos.find(query, options);
+  return Todos.find(selector, options);
 });
 ```
-
-As you can notice, we can make this publication as complex as we need.
 
 That's it, easy huh?
 
