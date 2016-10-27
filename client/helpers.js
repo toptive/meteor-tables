@@ -6,8 +6,7 @@
 Helpers = {};
 
 Helpers.generateSearchFilter = function (selector, columns, searchString, filter) {
-  let conjunction = ('$and' in selector ) ? selector : {$and: [selector]};
-
+  let conjunction = selector;
   let disjunction = {$or: []};
 
   // filter searchable columns

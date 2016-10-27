@@ -22,7 +22,7 @@
     </table>
   
   </div>
-
-  {{> TableFooter settings=settings selector=selector result=result}}
-  
+  {{#if Template.subscriptionsReady}}
+    {{> TableFooter settings=settings selector=selector result=result}}
+  {{/if}}
 </template>

@@ -47,16 +47,19 @@ Template.MeteorTable.onCreated(function () {
   self.queryResult = new ReactiveVar(0);
 
   self.autorun(function () {
-    self.filter.set(Template.currentData().filter || {});
+    let externalFilter = Template.currentData().filter;
+    Tracker.nonreactive(() => self.filter.set(externalFilter || {}));
   });
 
-  // watch selector changes
-  self.autorun(function () {
-    let selector = self.selector.get();
-    let settings = Tracker.nonreactive(() => self.settings.get());
-
-    settings.current.page = 1;
-    self.settings.set(settings);
+  // watch external filter changes
+  self.autorun(function (c) {
+    let externalFilter = self.filter.get();
+    if (!c.firstRun){
+      let settings = Tracker.nonreactive(() => self.settings.get());
+      
+      settings.current.page = 1;
+      self.settings.set(settings);
+    }
   });
 
   self.autorun(function () {
