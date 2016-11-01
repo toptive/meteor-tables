@@ -5,14 +5,23 @@ Template.TableFooter.onCreated(function () {
   self.selector = self.data.selector;
   self.queryResult = self.data.result;
 
-  self.autorun(function () {
-    let table_id = self.settings.get().table_id;
-    
+  let settings = self.settings.get();
+  
+  self.autorun(function () {  
     self.subscribe('tables.collection.info', 
-      table_id, 
-      Tables.registered[table_id].collection._name, 
+      settings.table_id, 
+      Tables.registered[settings.table_id].collection._name, 
       self.selector.get()
     );
+  });
+
+  self.elemsFound = new ReactiveVar(0);
+
+  self.autorun(function () {
+    self.elemsFound.set(Math.min(
+      Counts.get('total_elems_'.concat(settings.table_id)),
+      settings.hard_limit
+    ));
   });
 });
 
@@ -23,10 +32,9 @@ Template.TableFooter.onRendered(function () {
 
   self.autorun(function () {
     settings = self.settings.get();
-    let totalElementsFound = Counts.get('total_elems_'.concat(settings.table_id));
     
     self.$('.pagination').pagination({
-      items: totalElementsFound,
+      items: self.elemsFound.get(),
       currentPage: settings.current.page,
       itemsOnPage: settings.current.entry,
       displayedPages: 3,
@@ -57,7 +65,7 @@ Template.TableFooter.helpers({
     return {
       beginPage: Math.min(offsetPage, itemsFound),
       endPage: itemsFound,
-      total: Counts.get('total_elems_'.concat(settings.table_id))
+      total: Template.instance().elemsFound.get()
     };
   }
 })

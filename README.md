@@ -122,7 +122,7 @@ Template.my_todos_template.helpers({
 });
 ```
 
-If you want to limit what is published to the client for security reasons you can provide a selector both in the settings which will be used by the publications, and in the publication. Selectors provided this way will be combined with selectors provided to the template using an AND relationship. Both selectors may query on the same fields if necessary.
+If you want to limit what is published to the client for security reasons you can provide a selector in the settings which will be used by the publications. Selectors provided this way will be combined with template filters using an AND relationship. Both selectors may query on the same fields if necessary.
 
 ```js
 table_settings: {
@@ -130,6 +130,15 @@ table_settings: {
   selector: {
     user_id: userId
   }
+}
+```
+
+By the other hand, you can hard limit how many items will be available to the client, just provide to the table settings the `hard_limit` option:
+
+```js
+table_settings: {
+  ... // other properties ...
+  hard_limit: 250
 }
 ```
 
@@ -226,3 +235,4 @@ table_settings: {
 | `default_sort` (optional) | object           | A [Mongo-style sort](https://docs.meteor.com/api/collections.html#sortspecifiers) for initial column sort (by default will take the first column non-orderable). Only `Object` style sort is supported!.                      |
 | `state_save` (optional)   | boolean          | Enable or disable state saving. When enabled **MeteorTable** will store state information such as pagination position, display length, filtering and sorting (default `false`).   |
 | `dynamic_fields` (optional)   | array          | Columns to be rendered dynamically. This option will enable a dropdown button on top of the table with all the fields specified in there. You can use the same options as used with `fields` (`searchable`, `orderable`, etc.). |
+| `hard_limit` (optional)   | number           | If provided will restrict how many items will be available to the client.                       |

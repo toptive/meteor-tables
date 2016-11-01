@@ -30,7 +30,8 @@ Template.MeteorTable.onCreated(function () {
       search_string: state ? state.search : ''
     },
     dynamic_fields: TABLE.dynamic_fields,
-    session_id: TABLE.session_id
+    session_id: TABLE.session_id,
+    hard_limit: TABLE.hard_limit
   });
 
   // Taking ReactiveVar references
