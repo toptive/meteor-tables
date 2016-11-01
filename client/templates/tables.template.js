@@ -95,7 +95,10 @@ Template.MeteorTable.onCreated(function () {
   });
 
   self.getData = function () {
-    let cursor = TABLE.collection.find(self.selector.get());
+    let cursor = TABLE.collection.find(
+      self.selector.get(), 
+      _.pick(self.options.get(), 'sort')
+    );
 
     self.queryResult.set(cursor.count());
 
