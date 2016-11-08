@@ -46,13 +46,20 @@ Template.MeteorTable.onCreated(function () {
   self.options = new ReactiveVar({});
   self.filter = new ReactiveVar({});
   self.queryResult = new ReactiveVar(0);
+  self.recordsIds = new ReactiveVar([]);
+
+  self.autorun(function () {
+    let cursor = Tables.tableRecords.find({table_id: data.table_id});
+
+    self.recordsIds.set(cursor.map(d => d._id));
+  });
 
   self.autorun(function () {
     let externalFilter = Template.currentData().filter;
     Tracker.nonreactive(() => self.filter.set(externalFilter || {}));
   });
 
-  // watch external filter changes
+  // watch external filter changes to reset page
   self.autorun(function (c) {
     let externalFilter = self.filter.get();
     if (!c.firstRun){
@@ -95,8 +102,11 @@ Template.MeteorTable.onCreated(function () {
   });
 
   self.getData = function () {
-    let cursor = TABLE.collection.find(
-      self.selector.get(), 
+    let cursor = TABLE.collection.find({
+      _id: {
+        $in: self.recordsIds.get()
+      }
+    }, 
       _.pick(self.options.get(), 'sort')
     );
 
@@ -123,6 +133,10 @@ Template.MeteorTable.helpers({
     // We take this reference to TableFooter component
     return Template.instance().selector;
   },
+  options: () => {
+    // We take this reference to TableFooter component
+    return Template.instance().options;
+  },
   fields: () => {
     // We take this reference to TableHeader component
     return Template.instance().fields;
@@ -142,5 +156,8 @@ Template.MeteorTable.helpers({
   },
   table_headers: () => {
     return Template.instance().fields.get();
+  },
+  classes: () => {
+    return Template.currentData().settings.classes;
   }
 });

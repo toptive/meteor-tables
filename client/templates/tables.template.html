@@ -4,7 +4,7 @@
   
   <div class="table-wrapper">
     
-    <table class="table table-hover">
+    <table class="{{#if classes}} {{classes}} {{else}}table table-hover{{/if}}">
       <thead>
         <tr>
           {{#each column in table_headers}}
@@ -22,7 +22,6 @@
     </table>
   
   </div>
-  {{#if Template.subscriptionsReady}}
-    {{> TableFooter settings=settings selector=selector result=result}}
-  {{/if}}
+  
+  {{> TableFooter settings=settings selector=selector options=options result=result}}
 </template>

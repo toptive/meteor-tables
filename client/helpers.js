@@ -30,7 +30,7 @@ Helpers.generateFieldsFilter = function (columnFields, extraFields) {
   let fields = columnFields.reduce((o, e) => { o[e.data] = 1; return o; }, {});
 
   if (extraFields) {
-    fields = extraFields.reduce((o, e) => {o[e] = 1; return o; }, fields);
+    fields = extraFields.reduce((o, e) => { o[e] = 1; return o; }, fields);
   }
 
   return fields;

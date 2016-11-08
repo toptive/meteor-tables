@@ -3,15 +3,21 @@ Template.TableFooter.onCreated(function () {
 
   self.settings = self.data.settings;
   self.selector = self.data.selector;
+  self.options = self.data.options;
   self.queryResult = self.data.result;
 
   let settings = self.settings.get();
   
+  self.getTotalElems = function () {
+    return Counts.get('total_elems_'.concat(settings.table_id));
+  };
+
   self.autorun(function () {  
-    self.subscribe('tables.collection.info', 
+    self.subscription = self.subscribe('tables.collection.info', 
       settings.table_id, 
       Tables.registered[settings.table_id].collection._name, 
-      self.selector.get()
+      self.selector.get(),
+      self.options.get()
     );
   });
 
@@ -19,7 +25,7 @@ Template.TableFooter.onCreated(function () {
 
   self.autorun(function () {
     self.elemsFound.set(Math.min(
-      Counts.get('total_elems_'.concat(settings.table_id)),
+      self.getTotalElems(),
       settings.hard_limit
     ));
   });
@@ -52,6 +58,16 @@ Template.TableFooter.onRendered(function () {
     
     self.settings.set(settings);
   }
+
+  self.autorun(function () {
+    if (self.subscription.ready()) {
+      let settings = Tracker.nonreactive(() => self.settings.get());
+      if (settings.current.entry >= self.getTotalElems() && settings.current.page !== 1) {
+        settings.current.page = 1;
+        self.settings.set(settings);
+      }
+    }
+  });
 });
 
 Template.TableFooter.helpers({
