@@ -50,6 +50,7 @@ We found ourselves we the need of Data tables easily to customize and some featu
     <td>{{title}}</td>
     <td>{{description}}</td>
     <td>{{created_at}}</td>
+    <td>{{author.firstname}} {{author.lastname}}</td>
   </tr>
 </template>
 ```
@@ -77,7 +78,8 @@ TodosController = RouteController.extend({
             title: 'Title'
           },
           { data: 'description', title: 'Description' },
-          { data: 'created_at', title: 'Created' }  
+          { data: 'created_at', title: 'Created' },
+          { data: 'author', title: 'Author', search_fields: ['firstname', 'lastname'] } // see fields options
         ]
       }
     }
@@ -228,7 +230,7 @@ table_settings: {
 | `publication`             | string           | Publication name, **MeteorTable** will subscribe to this publication.                           |
 | `template`                | string           | Template name to be used to render each one of the items found as table's row.                  |
 | `collection`              | Mongo.Collection | Mongo collection used to fetch data.                                                            |
-| `fields`                  | array      | Columns to be rendered by **MeteorTable** : <ul><li>`title` - column name.</li><li>`data`- collection property.</li><li>`orderable`- whether or not the column should be orderable (default `true`).</li><li>`searchable`- whether or not the column should be searchable (default `true`).</li>  |
+| `fields`                  | array      | Columns to be rendered by **MeteorTable** : <ul><li>`title` - column name.</li><li>`data`- collection property.</li><li>`orderable`- whether or not the column should be orderable (default `true`).</li><li>`searchable`- whether or not the column should be searchable (default `true`).</li><li>`search_fields`- in case we have a column where its data is an object, we specify this array with its properties, otherwise this must be set as `searchable: false`</li>  |
 | `entries` (optional)      | array            | This parameter allows you to specify the length options that **MeteorTable** shows at top left of the table (default `[10, 25, 50, 100]`).         |
 | `selector` (optional)     | object           | A [Mongo-style selector](https://docs.meteor.com/#/full/selectors) to filter both client and server side data. |
 | `extra_fields` (optional) | array            | Array of collection properties to be published to the client.                                   |

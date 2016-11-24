@@ -9,20 +9,45 @@ Helpers.generateSearchFilter = function (selector, columns, searchString, filter
   let conjunction = selector;
   let disjunction = {$or: []};
 
+  let searchFields = [];
+  let regex = { '$regex' :  '.*' + searchString + '.*', '$options' : 'i'};
+
   // filter searchable columns
   disjunction['$or'] = columns
-    .filter(c => !('searchable' in c))
+    .filter(c => !('searchable' in c) || c.searchable)
     .map(c => { 
-      let filter = {}; 
-      
-      filter[c.data] = { '$regex' :  '.*' + searchString + '.*', '$options' : 'i'}; 
+      let filter = {};
 
-      return filter;
+      if (c.search_fields) searchFields = [...searchFields, ...c.search_fields.map(f => c.data +'.'+ f)];
+      else {
+        filter[c.data] = regex;
+        return filter;
+      }
     });
 
-  conjunction['$and'][1] = disjunction;
-  if (filter instanceof Object) conjunction['$and'][2] = filter;
+  if (searchFields.length > 0) 
+    disjunction['$or'] = [
+      ...disjunction['$or'], 
+      ...searchFields.map(f => {
+        let filter = {};
 
+        filter[f] = regex;
+
+        return filter;
+      })
+    ]
+
+  let index = 1;
+
+  if (disjunction['$or'].length > 0) {
+    conjunction['$and'][index] = disjunction;
+    index++;
+  }
+
+  if (filter instanceof Object) {
+    conjunction['$and'][index] = filter;
+  }
+  
   return conjunction;
 };
 
@@ -46,6 +71,15 @@ Helpers.generateDefaultSortingCriteria = function (columnFields) {
 
     return sort;
   }
+};
+
+Helpers.isEmptyObject = function (obj) {
+  for(var prop in obj) {
+    if (Object.prototype.hasOwnProperty.call(obj, prop)) {
+      return false;
+    }
+  }
+  return true;
 };
 
 Helpers.saveSate = function (table_id, settings) {
