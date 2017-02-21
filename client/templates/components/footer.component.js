@@ -12,7 +12,15 @@ Template.TableFooter.onCreated(function () {
     return Counts.get('total_elems_'.concat(settings.table_id));
   };
 
-  self.autorun(function () {  
+  self.autorun(function () {
+    subs.subscribe('tables.collection.total_elems', 
+      settings.table_id,
+      Tables.registered[settings.table_id].collection._name,
+      self.selector.get()
+    );
+  });
+
+  self.autorun(function () {
     self.subscription = self.subscribe('tables.collection.info', 
       settings.table_id, 
       Tables.registered[settings.table_id].collection._name, 

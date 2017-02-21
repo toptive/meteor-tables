@@ -79,10 +79,12 @@ Template.MeteorTable.onCreated(function () {
       skip: settings.current.page * settings.current.entry - settings.current.entry,
       sort: settings.current.sort
     });
+
+    console.log(self.options.get());
   });
 
   self.autorun(function () {
-    self.subscribe(TABLE.pub, self.selector.get(), self.options.get());
+    subs.subscribe(TABLE.pub, self.selector.get(), self.options.get());
   });
   
   self.autorun(function () {
