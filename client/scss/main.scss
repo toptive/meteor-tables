@@ -1,6 +1,11 @@
 @import 'components/table_headers';
 @import 'components/header';
 @import 'components/footer';
+@import 'components/loading';
+
+.meteor-table-wrapper {
+  position: relative;
+}
 
 .table-wrapper {
   overflow-x: scroll;

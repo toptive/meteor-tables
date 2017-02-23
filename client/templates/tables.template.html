@@ -1,27 +1,37 @@
 <template name="MeteorTable">
-
-  {{> TableHeader settings=settings selector=selector fields=fields filter=filter}}
-  
-  <div class="table-wrapper">
+  <div class="meteor-table-wrapper">
+    {{> TableHeader settings=settings selector=selector fields=fields filter=filter}}
     
-    <table class="{{#if classes}} {{classes}} {{else}}table table-hover{{/if}}">
-      <thead>
-        <tr>
-          {{#each column in table_headers}}
-            {{> table_header settings=settings fields=fields column=column}}
-          {{/each}}
-        </tr>
-      </thead>
-      <tbody>
-        {{#if Template.subscriptionsReady}}
-          {{#each documents}}
-            {{> Template.dynamic template=template }}
-          {{/each}}
-        {{/if}}
-      </tbody>
-    </table>
-  
+    <div class="table-wrapper">
+      
+      <table class="{{#if classes}} {{classes}} {{else}}table table-hover{{/if}}">
+        <thead>
+          <tr>
+            {{#each column in table_headers}}
+              {{> table_header settings=settings fields=fields column=column}}
+            {{/each}}
+          </tr>
+        </thead>
+        <tbody>
+          
+            {{#each documents}}
+              {{> Template.dynamic template=template }}
+            {{/each}}
+            {{#if noData}}
+              <tr>
+                <td>No data available in table</td>
+              </tr>
+            {{/if}}
+          
+        </tbody>
+      </table>
+    
+    </div>
+    
+    {{> TableFooter settings=settings selector=selector options=options result=result}}
+
+    {{#unless ready}}
+      {{> MeteorTablesLoading}}
+    {{/unless}}
   </div>
-  
-  {{> TableFooter settings=settings selector=selector options=options result=result}}
 </template>

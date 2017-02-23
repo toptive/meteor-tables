@@ -1,6 +1,8 @@
 Template.MeteorTable.onCreated(function () {
   let self = this;
   
+  self.ready = new ReactiveVar();
+
   let data = Template.currentData().settings;
 
   const TABLE = Tables.registerTable(data);
@@ -62,6 +64,7 @@ Template.MeteorTable.onCreated(function () {
   // watch external filter changes to reset page
   self.autorun(function (c) {
     let externalFilter = self.filter.get();
+
     if (!c.firstRun){
       let settings = Tracker.nonreactive(() => self.settings.get());
       
@@ -79,12 +82,12 @@ Template.MeteorTable.onCreated(function () {
       skip: settings.current.page * settings.current.entry - settings.current.entry,
       sort: settings.current.sort
     });
-
-    console.log(self.options.get());
   });
 
   self.autorun(function () {
-    subs.subscribe(TABLE.pub, self.selector.get(), self.options.get());
+    let handle = subs.subscribe(TABLE.pub, self.selector.get(), self.options.get());
+
+    self.ready.set(handle.ready());
   });
   
   self.autorun(function () {
@@ -127,6 +130,12 @@ Template.MeteorTable.events({
 });
 
 Template.MeteorTable.helpers({
+  ready: () => {
+    return Template.instance().ready.get();
+  },
+  noData: () => {
+    return Template.instance().queryResult.get() === 0;
+  },
   settings: () => {
     // We take this reference to TableHeader and TableFooter components
     return Template.instance().settings;
