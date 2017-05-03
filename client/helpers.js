@@ -18,16 +18,17 @@ Helpers.generateSearchFilter = function (selector, columns, searchString, filter
     .map(c => { 
       let filter = {};
 
-      if (c.search_fields) searchFields = [...searchFields, ...c.search_fields.map(f => c.data +'.'+ f)];
+      if (c.search_fields) searchFields = [...searchFields, ...c.search_fields.map(f => `${c.data}.${f}`)];
       else {
         filter[c.data] = regex;
         return filter;
       }
-    });
+    })
+    .filter(c => typeof c !== 'undefined');
 
   if (searchFields.length > 0) 
     disjunction['$or'] = [
-      ...disjunction['$or'], 
+      ...disjunction['$or'],
       ...searchFields.map(f => {
         let filter = {};
 
