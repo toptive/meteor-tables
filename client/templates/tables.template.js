@@ -21,6 +21,8 @@ Template.MeteorTable.onCreated(function () {
 
   let state = TABLE.state_save ? Helpers.loadState(data.table_id) : null;
 
+  self.subManager = TABLE.sub_manager ? TABLE.sub_manager : self;
+
   self.settings = new ReactiveVar({
     table_id: data.table_id,
     template: TABLE.template,
@@ -84,10 +86,22 @@ Template.MeteorTable.onCreated(function () {
     });
   });
 
-  self.autorun(function () {
-    let handle = subs.subscribe(TABLE.pub, self.selector.get(), self.options.get());
+  let handle = {};
 
-    self.ready.set(handle.ready());
+  self.autorun(function () {
+    handle = self.subManager.subscribe(TABLE.pub, self.selector.get(), self.options.get(), function onReady () {
+      self.ready.set(TABLE.sub_manager ? false : true);
+    });
+  });
+
+  self.autorun(function () {
+    var ready = null;
+    
+    if (TABLE.sub_manager) {
+      ready = handle.ready();
+    }
+
+    self.ready.set(ready);
   });
   
   self.autorun(function () {

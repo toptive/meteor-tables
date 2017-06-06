@@ -21,7 +21,7 @@ Template.TableFooter.onCreated(function () {
   });
 
   self.autorun(function () {
-    self.subscription = self.subscribe('tables.collection.info', 
+    self.handle = self.subscribe('tables.collection.info', 
       settings.table_id, 
       Tables.registered[settings.table_id].collection._name, 
       self.selector.get(),
@@ -68,7 +68,7 @@ Template.TableFooter.onRendered(function () {
   }
 
   self.autorun(function () {
-    if (self.subscription.ready()) {
+    if (self.handle.ready()) {
       let settings = Tracker.nonreactive(() => self.settings.get());
       if (settings.current.entry >= self.getTotalElems() && settings.current.page !== 1) {
         settings.current.page = 1;
