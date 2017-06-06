@@ -239,3 +239,4 @@ table_settings: {
 | `dynamic_fields` (optional)   | array          | Columns to be rendered dynamically. This option will enable a dropdown button on top of the table with all the fields specified in there. You can use the same options as used with `fields` (`searchable`, `orderable`, etc.). |
 | `hard_limit` (optional)   | number           | If provided will restrict how many items will be available to the client.                       |
 | `classes` (optional)      | string           | Allow to change the table style. By default will apply bootstrap classes `.table` and `.table-hover` |
+| `sub_manager` (optional)  | boolean          | Enable or disable the subscription manager to fetch data. |
