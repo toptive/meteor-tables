@@ -6,6 +6,8 @@ Template.TableFooter.onCreated(function () {
   self.options = self.data.options;
   self.queryResult = self.data.result;
 
+  self.totalItems = new ReactiveVar(0);
+
   let settings = self.settings.get();
   let TABLE = Tables.registered[settings.table_id];
 
@@ -32,10 +34,8 @@ Template.TableFooter.onCreated(function () {
     );
   });
 
-  self.elemsFound = new ReactiveVar(0);
-
   self.autorun(function () {
-    self.elemsFound.set(Math.min(
+    self.totalItems.set(Math.min(
       self.getTotalElems(),
       settings.hard_limit
     ));
@@ -50,16 +50,18 @@ Template.TableFooter.onRendered(function () {
   self.autorun(function () {
     settings = self.settings.get();
     
-    self.$('.pagination').pagination({
-      items: self.elemsFound.get(),
-      currentPage: settings.current.page,
-      itemsOnPage: settings.current.entry,
-      displayedPages: 3,
-      edges: 1,
-      ellipsePageSet: false,
-      disableAnchors: true,
-      onPageClick: onPageClick
-    });
+    self.$('.pagination')
+      .pagination({
+        items: self.totalItems.get(),
+        currentPage: settings.current.page,
+        itemsOnPage: settings.current.entry,
+        displayedPages: 3,
+        edges: 1,
+        ellipsePageSet: false,
+        disableAnchors: true,
+        onPageClick: onPageClick
+      })
+      .pagination(self.handle.ready() ? 'enable' : 'disable');
   });
 
   function onPageClick (pageNumber, e) {   
@@ -92,7 +94,7 @@ Template.TableFooter.helpers({
     return {
       beginPage: Math.min(offsetPage, itemsFound),
       endPage: itemsFound,
-      total: Template.instance().elemsFound.get()
+      total: Template.instance().totalItems.get()
     };
   }
 })

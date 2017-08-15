@@ -5,3 +5,12 @@
 .result-description {
   margin: 10px 0 10px 0;
 }
+
+.pagination-navbar {
+  display: flex;
+  align-items: center;
+
+  .fa-spin {
+    margin-right: 15px;
+  }
+}

@@ -8,7 +8,11 @@
     </div>
     <div class="col-md-6">
 
-      <nav aria-label="Table navigation" class="pull-right">
+      <nav aria-label="Table navigation" class="pull-right pagination-navbar">
+        {{#unless Template.subscriptionsReady}}
+          <i class="fa fa-circle-o-notch fa-spin"></i>
+        {{/unless}}
+
         <ul class="pagination"></ul>
       </nav>
     
