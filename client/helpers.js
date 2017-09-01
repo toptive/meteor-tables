@@ -53,7 +53,7 @@ Helpers.generateSearchFilter = function (selector, columns, searchString, filter
 };
 
 Helpers.generateFieldsFilter = function (columnFields, extraFields) {
-  let fields = columnFields.reduce((o, e) => { o[e.data] = 1; return o; }, {});
+  let fields = columnFields.reduce((o, e) => { o[e.data] = e.options || 1; return o; }, {});
 
   if (extraFields) {
     fields = extraFields.reduce((o, e) => { o[e] = 1; return o; }, fields);
