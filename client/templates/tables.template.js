@@ -67,7 +67,7 @@ Template.MeteorTable.onCreated(function () {
   self.autorun(function (c) {
     let externalFilter = self.filter.get();
 
-    if (!c.firstRun){
+    if (!c.firstRun && self.ready.curValue) {
       let settings = Tracker.nonreactive(() => self.settings.get());
       
       settings.current.page = 1;
@@ -107,7 +107,7 @@ Template.MeteorTable.onCreated(function () {
   self.autorun(function () {
     let settings = self.settings.get();
 
-    if (TABLE.state_save) {
+    if (TABLE.state_save && self.ready.curValue) {
       let state = {
         time: +new Date(),
         start: settings.current.page,
